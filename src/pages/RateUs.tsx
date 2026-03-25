@@ -92,12 +92,22 @@ const RateUs = () => {
   const { data: reviews = [] } = useQuery({
     queryKey: ["site-reviews"],
     queryFn: async () => {
-      const { data, error } = await supabase
+      const { data: reviewsData, error } = await supabase
         .from("site_reviews")
-        .select("*, profiles!site_reviews_user_id_fkey(full_name, avatar_url)")
+        .select("*")
         .order("created_at", { ascending: false });
       if (error) throw error;
-      return data as SiteReview[];
+      // Fetch profiles for each review
+      const userIds = [...new Set((reviewsData || []).map(r => r.user_id))];
+      const { data: profilesData } = await supabase
+        .from("profiles")
+        .select("user_id, full_name, avatar_url")
+        .in("user_id", userIds);
+      const profileMap = new Map((profilesData || []).map(p => [p.user_id, p]));
+      return (reviewsData || []).map(r => ({
+        ...r,
+        profiles: profileMap.get(r.user_id) || null,
+      })) as SiteReview[];
     },
   });
 

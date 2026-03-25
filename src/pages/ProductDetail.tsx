@@ -49,13 +49,22 @@ const ProductDetail = () => {
   const { data: dbReviews } = useQuery({
     queryKey: ["product-reviews", id],
     queryFn: async () => {
-      const { data, error } = await supabase
+      const { data: reviewsData, error } = await supabase
         .from("reviews")
-        .select("*, profiles!reviews_user_id_fkey(full_name, avatar_url)")
+        .select("*")
         .eq("auction_id", Number(id))
         .order("created_at", { ascending: false });
       if (error) throw error;
-      return data as DbReview[];
+      const userIds = [...new Set((reviewsData || []).map(r => r.user_id))];
+      const { data: profilesData } = await supabase
+        .from("profiles")
+        .select("user_id, full_name, avatar_url")
+        .in("user_id", userIds.length > 0 ? userIds : ["none"]);
+      const profileMap = new Map((profilesData || []).map(p => [p.user_id, p]));
+      return (reviewsData || []).map(r => ({
+        ...r,
+        profiles: profileMap.get(r.user_id) || null,
+      })) as DbReview[];
     },
     enabled: !!id,
   });
