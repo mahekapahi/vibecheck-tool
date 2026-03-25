@@ -14,7 +14,185 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      auctions: {
+        Row: {
+          avg_rating: number | null
+          badge: string | null
+          badge_color: string | null
+          bid_label: string | null
+          category: string
+          category_slug: string
+          created_at: string
+          creator_id: string | null
+          current_bid: number | null
+          description: string | null
+          end_time: string | null
+          id: number
+          image_url: string | null
+          starting_price: number
+          status: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          avg_rating?: number | null
+          badge?: string | null
+          badge_color?: string | null
+          bid_label?: string | null
+          category: string
+          category_slug: string
+          created_at?: string
+          creator_id?: string | null
+          current_bid?: number | null
+          description?: string | null
+          end_time?: string | null
+          id?: number
+          image_url?: string | null
+          starting_price: number
+          status?: string | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          avg_rating?: number | null
+          badge?: string | null
+          badge_color?: string | null
+          bid_label?: string | null
+          category?: string
+          category_slug?: string
+          created_at?: string
+          creator_id?: string | null
+          current_bid?: number | null
+          description?: string | null
+          end_time?: string | null
+          id?: number
+          image_url?: string | null
+          starting_price?: number
+          status?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      contact_messages: {
+        Row: {
+          created_at: string
+          email: string
+          id: string
+          message: string
+          name: string
+          subject: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          id?: string
+          message: string
+          name: string
+          subject?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          id?: string
+          message?: string
+          name?: string
+          subject?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          created_at: string
+          full_name: string
+          id: string
+          role: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          avatar_url?: string | null
+          created_at?: string
+          full_name?: string
+          id?: string
+          role?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          avatar_url?: string | null
+          created_at?: string
+          full_name?: string
+          id?: string
+          role?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      reviews: {
+        Row: {
+          auction_id: number | null
+          created_at: string
+          id: string
+          rating: number
+          text: string
+          user_id: string
+        }
+        Insert: {
+          auction_id?: number | null
+          created_at?: string
+          id?: string
+          rating: number
+          text: string
+          user_id: string
+        }
+        Update: {
+          auction_id?: number | null
+          created_at?: string
+          id?: string
+          rating?: number
+          text?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reviews_auction_id_fkey"
+            columns: ["auction_id"]
+            isOneToOne: false
+            referencedRelation: "auctions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      site_reviews: {
+        Row: {
+          created_at: string
+          id: string
+          rating: number
+          text: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          rating: number
+          text: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          rating?: number
+          text?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
