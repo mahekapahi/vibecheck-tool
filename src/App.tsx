@@ -8,6 +8,7 @@ import Contact from "./pages/Contact.tsx";
 import Auctions from "./pages/Auctions.tsx";
 import ProductDetail from "./pages/ProductDetail.tsx";
 import Login from "./pages/Login.tsx";
+import RateUs from "./pages/RateUs.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
 const queryClient = new QueryClient();
