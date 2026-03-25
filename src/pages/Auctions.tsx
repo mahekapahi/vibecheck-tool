@@ -2,17 +2,8 @@ import { useState, useMemo } from "react";
 import { Link } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-
-const allAuctions = [
-  { id: 8, img: "https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=600&q=80", title: "Abstract Canvas No. 7", creator: "Maya Chen", category: "painting", bid: 200000, bidLabel: "₹2,00,000", time: "Ends 11:42 PM IST", badge: "🔥 Ending Soon", status: "ending-soon" },
-  { id: 7, img: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&q=80", title: "Urban Geometry — Series II", creator: "Liam Torres", category: "photography", bid: 46500, bidLabel: "₹46,500", time: "Ends Sun 3:30 AM IST", badge: "New", status: "new" },
-  { id: 6, img: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=600&q=80", title: "Ceramic Form III", creator: "Suki Amore", category: "sculpture", bid: 145000, bidLabel: "₹1,45,000", time: "Ends 2:10 AM IST", badge: "Exclusive", badgeColor: "bg-secondary", status: "ending-soon" },
-  { id: 5, img: "https://images.unsplash.com/photo-1561214115-f2f134cc4912?w=600&q=80", title: "Solitude — Fine Art Print", creator: "Nadia Osei", category: "photography", bid: 74000, bidLabel: "₹74,000", time: "Ends Sat 11:00 PM IST", badge: "", status: "new" },
-  { id: 4, img: "https://images.unsplash.com/photo-1549490349-8643362247b5?w=600&q=80", title: "Neon Garden — Digital", creator: "Remy Blaze", category: "digital", bid: 265000, bidLabel: "₹2,65,000", time: "Ends Sat 6:30 AM IST", badge: "🔥 Hot", status: "ending-soon" },
-  { id: 3, img: "https://images.unsplash.com/photo-1582738411706-bfc8e691d1c2?w=600&q=80", title: "Woven Memory Piece", creator: "Suki Amore", category: "textile", bid: 35000, bidLabel: "₹35,000", time: "Ends 4 days", badge: "", status: "new" },
-  { id: 2, img: "https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=600&q=80", title: "Coastal Reverie — Oil", creator: "Maya Chen", category: "painting", bid: 120000, bidLabel: "₹1,20,000", time: "Ends Tomorrow", badge: "New", status: "new" },
-  { id: 1, img: "https://images.unsplash.com/photo-1547891654-e66ed7ebb968?w=600&q=80", title: "Bronze Horizon Sculpture", creator: "Liam Torres", category: "sculpture", bid: 88000, bidLabel: "₹88,000", time: "Ends 3 days", badge: "", status: "new" },
-];
+import { allAuctions } from "@/data/auctions";
+import { Star } from "lucide-react";
 
 const inputClass = "w-full border-[1.5px] border-foreground/[0.18] rounded-lg px-3 py-2.5 bg-background/30 text-foreground focus:border-primary focus:ring-2 focus:ring-primary/15 outline-none transition font-body text-sm";
 
@@ -25,13 +16,13 @@ const Auctions = () => {
   const filtered = useMemo(() => {
     let result = allAuctions.filter((a) => {
       const matchSearch = !search || a.title.toLowerCase().includes(search.toLowerCase()) || a.creator.toLowerCase().includes(search.toLowerCase());
-      const matchCat = !category || a.category === category;
+      const matchCat = !category || a.categorySlug === category;
       const matchStatus = status === "all" || a.status === status;
       return matchSearch && matchCat && matchStatus;
     });
-    if (sort === "highest") result.sort((a, b) => b.bid - a.bid);
-    else if (sort === "lowest") result.sort((a, b) => a.bid - b.bid);
-    else result.sort((a, b) => b.id - a.id);
+    if (sort === "highest") result = [...result].sort((a, b) => b.bid - a.bid);
+    else if (sort === "lowest") result = [...result].sort((a, b) => a.bid - b.bid);
+    else result = [...result].sort((a, b) => b.id - a.id);
     return result;
   }, [search, category, status, sort]);
 
@@ -88,9 +79,9 @@ const Auctions = () => {
           ) : (
             <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {filtered.map((a) => (
-                <div key={a.id} className="card-artevia">
+                <Link key={a.id} to={`/auction/${a.id}`} className="card-artevia block no-underline">
                   <div className="relative overflow-hidden h-52">
-                    <img src={a.img} alt={a.title} className="w-full h-full object-cover transition-transform duration-500 hover:scale-105" />
+                    <img src={a.img} alt={a.title} loading="lazy" width={800} height={600} className="w-full h-full object-cover transition-transform duration-500 hover:scale-105" />
                     {a.badge && (
                       <span className={`absolute top-3 left-3 ${a.badgeColor || "bg-primary"} text-primary-foreground text-[0.7rem] font-bold tracking-wider uppercase px-2.5 py-1 rounded-full`}>
                         {a.badge}
@@ -99,19 +90,27 @@ const Auctions = () => {
                   </div>
                   <div className="p-5">
                     <h5 className="font-display text-foreground text-base mb-1">{a.title}</h5>
-                    <div className="text-xs text-muted-foreground mb-3">by <strong>{a.creator}</strong></div>
+                    <div className="text-xs text-muted-foreground mb-2">by <strong>{a.creator}</strong></div>
+                    <div className="flex items-center gap-1.5 mb-3">
+                      <div className="flex gap-0.5">
+                        {[1, 2, 3, 4, 5].map((s) => (
+                          <Star key={s} size={12} className={s <= Math.round(a.avgRating) ? "fill-star text-star" : "text-muted-foreground/30"} />
+                        ))}
+                      </div>
+                      <span className="text-xs text-muted-foreground">{a.avgRating} ({a.reviews.length})</span>
+                    </div>
                     <div className="flex justify-between items-end">
                       <div>
                         <div className="text-[0.7rem] text-muted-foreground/60">Current Bid</div>
                         <div className="font-display text-lg font-bold text-primary">{a.bidLabel}</div>
                       </div>
-                      <Link to="/login" className="bg-primary text-primary-foreground text-xs font-bold px-3.5 py-1.5 rounded-full hover:bg-primary-dark transition-colors">
-                        Bid Now
-                      </Link>
+                      <span className="bg-primary text-primary-foreground text-xs font-bold px-3.5 py-1.5 rounded-full">
+                        View & Bid
+                      </span>
                     </div>
                     <div className="text-xs text-muted-foreground mt-2">⏱ {a.time}</div>
                   </div>
-                </div>
+                </Link>
               ))}
             </div>
           )}
