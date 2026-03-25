@@ -1,39 +1,13 @@
 import { Link } from "react-router-dom";
 import { useEffect, useRef } from "react";
+import { Star } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ReviewsSection from "@/components/ReviewsSection";
+import FeedbackSection from "@/components/FeedbackSection";
+import { allAuctions } from "@/data/auctions";
 
-const auctionCards = [
-  {
-    img: "https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=600&q=80",
-    title: "Abstract Canvas No. 7",
-    creator: "Maya Chen",
-    category: "Digital Art",
-    bid: "₹2,00,000",
-    time: "Ends 11:42 PM IST",
-    badge: "🔥 Ending Soon",
-  },
-  {
-    img: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&q=80",
-    title: "Urban Geometry — Series II",
-    creator: "Liam Torres",
-    category: "Photography",
-    bid: "₹46,500",
-    time: "Ends Sun 3:30 AM IST",
-    badge: "New",
-  },
-  {
-    img: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=600&q=80",
-    title: "Ceramic Form III",
-    creator: "Suki Amore",
-    category: "Sculpture",
-    bid: "₹1,45,000",
-    time: "Ends 2:10 AM IST",
-    badge: "Exclusive",
-    badgeColor: "bg-secondary",
-  },
-];
+const featuredAuctions = allAuctions.slice(0, 3);
 
 const howItWorks = [
   { icon: "🎨", title: "Creator Uploads", desc: "List original works with a starting price and duration." },
@@ -49,8 +23,7 @@ const StatCounter = ({ target, suffix, label }: { target: string; suffix: string
     if (!el) return;
     const num = parseInt(target);
     let start = 0;
-    const duration = 1500;
-    const step = Math.ceil(num / (duration / 16));
+    const step = Math.ceil(num / (1500 / 16));
     const timer = setInterval(() => {
       start += step;
       if (start >= num) { start = num; clearInterval(timer); }
@@ -90,14 +63,14 @@ const Home = () => (
           </div>
           <div className="hidden lg:block relative" style={{ animation: "fadeUp 1.2s ease forwards 0.5s", opacity: 0 }}>
             <div className="space-y-4">
-              {auctionCards.slice(0, 3).map((c, i) => (
-                <div key={i} className="bg-card rounded-xl p-3 flex gap-4 items-center shadow-lg border border-primary/[0.08]" style={{ transform: `translateX(${i * 20}px)` }}>
+              {featuredAuctions.map((c, i) => (
+                <Link key={i} to={`/auction/${c.id}`} className="bg-card rounded-xl p-3 flex gap-4 items-center shadow-lg border border-primary/[0.08] no-underline hover:shadow-xl transition-shadow" style={{ transform: `translateX(${i * 20}px)` }}>
                   <img src={c.img} alt={c.title} className="w-20 h-20 rounded-lg object-cover" />
                   <div>
                     <div className="font-display font-bold text-sm text-foreground">{c.title}</div>
-                    <div className="text-xs text-muted-foreground">{c.bid} · {c.time}</div>
+                    <div className="text-xs text-muted-foreground">{c.bidLabel} · {c.time}</div>
                   </div>
-                </div>
+                </Link>
               ))}
             </div>
           </div>
@@ -124,26 +97,34 @@ const Home = () => (
         <h2 className="section-title text-center">Featured Auctions</h2>
         <p className="section-sub text-center">Hand-picked works closing soon</p>
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {auctionCards.map((c, i) => (
-            <div key={i} className="card-artevia">
+          {featuredAuctions.map((c) => (
+            <Link key={c.id} to={`/auction/${c.id}`} className="card-artevia block no-underline">
               <div className="relative overflow-hidden h-56">
-                <img src={c.img} alt={c.title} className="w-full h-full object-cover transition-transform duration-500 hover:scale-105" />
+                <img src={c.img} alt={c.title} loading="lazy" width={800} height={600} className="w-full h-full object-cover transition-transform duration-500 hover:scale-105" />
                 <span className={`absolute top-3 left-3 ${c.badgeColor || "bg-primary"} text-primary-foreground text-[0.72rem] font-bold tracking-wider uppercase px-2.5 py-1 rounded-full`}>
                   {c.badge}
                 </span>
               </div>
               <div className="p-5">
                 <h5 className="font-display text-foreground text-lg mb-1">{c.title}</h5>
-                <div className="text-sm text-muted-foreground mb-3">by <strong>{c.creator}</strong> · {c.category}</div>
+                <div className="text-sm text-muted-foreground mb-2">by <strong>{c.creator}</strong> · {c.category}</div>
+                <div className="flex items-center gap-1.5 mb-3">
+                  <div className="flex gap-0.5">
+                    {[1, 2, 3, 4, 5].map((s) => (
+                      <Star key={s} size={12} className={s <= Math.round(c.avgRating) ? "fill-star text-star" : "text-muted-foreground/30"} />
+                    ))}
+                  </div>
+                  <span className="text-xs text-muted-foreground">{c.avgRating} ({c.reviews.length} reviews)</span>
+                </div>
                 <div className="flex justify-between items-center">
                   <div>
                     <div className="text-xs text-muted-foreground/70">Current Bid</div>
-                    <div className="font-display text-xl font-bold text-primary">{c.bid}</div>
+                    <div className="font-display text-xl font-bold text-primary">{c.bidLabel}</div>
                   </div>
                   <div className="text-xs text-muted-foreground">⏱ {c.time}</div>
                 </div>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
         <div className="text-center mt-10">
@@ -179,6 +160,9 @@ const Home = () => (
 
     {/* Customer Reviews */}
     <ReviewsSection />
+
+    {/* Feedback / How can we improve */}
+    <FeedbackSection />
 
     <Footer />
   </div>
