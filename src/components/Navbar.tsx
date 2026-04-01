@@ -1,6 +1,6 @@
 import { Link, useLocation } from "react-router-dom";
 import { useState } from "react";
-import { Menu, X, LogOut, User } from "lucide-react";
+import { Menu, X, LogOut, User, ShoppingBag } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 
 const Navbar = () => {
@@ -9,52 +9,60 @@ const Navbar = () => {
   const { user, profile, signOut } = useAuth();
 
   const links = [
-    { to: "/", label: "Home" },
-    { to: "/auctions", label: "Auctions" },
+    { to: "/auctions", label: "Shop" },
     { to: "/about", label: "About" },
     { to: "/rate-us", label: "Rate Us" },
     { to: "/contact", label: "Contact" },
   ];
 
   return (
-    <nav className="sticky top-0 z-50 bg-background/85 backdrop-blur-xl border-b border-primary/[0.18] py-3.5">
+    <nav className="sticky top-0 z-50 bg-background/95 backdrop-blur-sm border-b border-border py-4">
       <div className="container mx-auto px-6 flex items-center justify-between">
-        <Link to="/" className="font-display text-[1.7rem] font-black text-foreground tracking-tight">
-          Arte<span className="text-primary">via</span>
+        <Link to="/" className="font-display text-2xl text-foreground tracking-tight">
+          Artevia
         </Link>
 
         {/* Desktop */}
-        <div className="hidden md:flex items-center gap-1">
+        <div className="hidden md:flex items-center gap-8">
           {links.map((l) => (
             <Link
               key={l.to}
               to={l.to}
-              className={`px-3.5 py-1.5 rounded-lg text-[0.95rem] font-medium transition-colors ${
-                location.pathname === l.to
+              className={"text-sm tracking-wider uppercase transition-colors " +
+                (location.pathname === l.to
                   ? "text-primary font-semibold"
-                  : "text-foreground hover:bg-primary/[0.12] hover:text-primary"
-              }`}
+                  : "text-foreground hover:text-primary"
+                )
+              }
             >
               {l.label}
             </Link>
           ))}
+        </div>
+
+        <div className="hidden md:flex items-center gap-4">
           {user ? (
-            <div className="ml-2 flex items-center gap-2">
-              <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 border border-primary/20">
-                <User size={14} className="text-primary" />
-                <span className="text-xs font-semibold text-foreground max-w-[100px] truncate">
+            <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2">
+                <User size={14} className="text-muted-foreground" />
+                <span className="text-xs text-foreground max-w-[100px] truncate">
                   {profile?.full_name || user.email?.split("@")[0]}
                 </span>
               </div>
-              <button onClick={signOut} className="p-2 rounded-full hover:bg-destructive/10 text-muted-foreground hover:text-destructive transition-colors" title="Sign out">
+              <button
+                onClick={signOut}
+                className="text-muted-foreground hover:text-primary transition-colors"
+                title="Sign out"
+              >
                 <LogOut size={16} />
               </button>
             </div>
           ) : (
-            <Link to="/login" className="ml-2 bg-primary text-primary-foreground rounded-full px-5 py-2 text-sm font-semibold hover:bg-primary-dark transition-all">
+            <Link to="/login" className="text-sm tracking-wider uppercase text-foreground hover:text-primary transition-colors">
               Login
             </Link>
           )}
+          <ShoppingBag size={18} className="text-foreground cursor-pointer hover:text-primary transition-colors" />
         </div>
 
         <button onClick={() => setOpen(!open)} className="md:hidden text-foreground">
@@ -63,19 +71,32 @@ const Navbar = () => {
       </div>
 
       {open && (
-        <div className="md:hidden bg-background/95 backdrop-blur-xl border-t border-primary/10 px-6 pb-4 pt-2 space-y-1">
+        <div className="md:hidden bg-background border-t border-border px-6 pb-4 pt-2 space-y-1">
           {links.map((l) => (
-            <Link key={l.to} to={l.to} onClick={() => setOpen(false)}
-              className={`block px-3 py-2 rounded-lg text-sm font-medium ${location.pathname === l.to ? "text-primary font-semibold" : "text-foreground"}`}>
+            <Link
+              key={l.to}
+              to={l.to}
+              onClick={() => setOpen(false)}
+              className={"block px-3 py-2 text-sm tracking-wider uppercase " +
+                (location.pathname === l.to ? "text-primary font-semibold" : "text-foreground")
+              }
+            >
               {l.label}
             </Link>
           ))}
           {user ? (
-            <button onClick={() => { signOut(); setOpen(false); }} className="block w-full text-center bg-destructive/10 text-destructive rounded-full px-5 py-2 text-sm font-semibold mt-2">
+            <button
+              onClick={() => { signOut(); setOpen(false); }}
+              className="block w-full text-center text-sm tracking-wider uppercase text-destructive mt-2 py-2"
+            >
               Sign Out
             </button>
           ) : (
-            <Link to="/login" onClick={() => setOpen(false)} className="block text-center bg-primary text-primary-foreground rounded-full px-5 py-2 text-sm font-semibold mt-2">
+            <Link
+              to="/login"
+              onClick={() => setOpen(false)}
+              className="block text-center text-sm tracking-wider uppercase text-foreground mt-2 py-2"
+            >
               Login
             </Link>
           )}
