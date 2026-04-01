@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Sans:wght@300;400;500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -6,50 +6,50 @@
 
 @layer base {
   :root {
-    --background: 197 100% 91%;
-    --foreground: 186 76% 21%;
+    --background: 30 33% 96%;
+    --foreground: 20 12% 16%;
 
-    --card: 0 0% 100%;
-    --card-foreground: 186 76% 21%;
+    --card: 30 25% 98%;
+    --card-foreground: 20 12% 16%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 186 76% 21%;
+    --popover: 30 25% 98%;
+    --popover-foreground: 20 12% 16%;
 
-    --primary: 170 75% 39%;
-    --primary-foreground: 0 0% 100%;
+    --primary: 16 65% 52%;
+    --primary-foreground: 30 33% 96%;
 
-    --primary-dark: 170 78% 33%;
+    --primary-dark: 16 65% 44%;
 
-    --secondary: 186 76% 21%;
-    --secondary-foreground: 0 0% 100%;
+    --secondary: 20 12% 16%;
+    --secondary-foreground: 30 33% 96%;
 
-    --muted: 197 60% 85%;
-    --muted-foreground: 186 40% 40%;
+    --muted: 30 18% 90%;
+    --muted-foreground: 20 8% 46%;
 
-    --accent: 170 75% 39%;
-    --accent-foreground: 0 0% 100%;
+    --accent: 16 65% 52%;
+    --accent-foreground: 30 33% 96%;
 
-    --destructive: 350 60% 50%;
+    --destructive: 0 60% 50%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 170 30% 80%;
-    --input: 170 30% 80%;
-    --ring: 170 75% 39%;
+    --border: 30 15% 86%;
+    --input: 30 15% 86%;
+    --ring: 16 65% 52%;
 
-    --radius: 1.125rem;
+    --radius: 0.5rem;
 
-    --dark-bg: 185 65% 15%;
+    --dark-bg: 20 14% 12%;
 
     --star: 38 90% 55%;
 
-    --sidebar-background: 0 0% 98%;
-    --sidebar-foreground: 240 5.3% 26.1%;
-    --sidebar-primary: 240 5.9% 10%;
-    --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 240 4.8% 95.9%;
-    --sidebar-accent-foreground: 240 5.9% 10%;
-    --sidebar-border: 220 13% 91%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --sidebar-background: 30 33% 96%;
+    --sidebar-foreground: 20 12% 16%;
+    --sidebar-primary: 16 65% 52%;
+    --sidebar-primary-foreground: 30 33% 96%;
+    --sidebar-accent: 30 18% 90%;
+    --sidebar-accent-foreground: 20 12% 16%;
+    --sidebar-border: 30 15% 86%;
+    --sidebar-ring: 16 65% 52%;
   }
 }
 
@@ -68,32 +68,29 @@
 
 @layer components {
   .btn-accent {
-    @apply bg-primary text-primary-foreground rounded-full px-8 py-3 font-semibold font-body text-[0.95rem] inline-block no-underline cursor-pointer transition-all duration-200;
+    @apply bg-primary text-primary-foreground rounded-none px-8 py-3 font-semibold font-body text-[0.85rem] tracking-wider uppercase inline-block no-underline cursor-pointer transition-all duration-200;
   }
   .btn-accent:hover {
-    @apply bg-primary-dark -translate-y-0.5;
-    box-shadow: 0 8px 24px hsl(var(--primary) / 0.38);
+    @apply bg-primary-dark;
   }
   .btn-outline-accent {
-    @apply bg-transparent text-secondary border-2 border-secondary rounded-full px-7 py-2.5 font-semibold font-body text-[0.95rem] inline-block no-underline cursor-pointer transition-all duration-200;
+    @apply bg-transparent text-foreground border border-foreground rounded-none px-7 py-2.5 font-semibold font-body text-[0.85rem] tracking-wider uppercase inline-block no-underline cursor-pointer transition-all duration-200;
   }
   .btn-outline-accent:hover {
-    @apply bg-secondary text-primary-foreground -translate-y-0.5;
+    @apply bg-foreground text-background;
   }
   .hero-eyebrow {
-    @apply inline-block bg-primary/15 text-primary text-xs font-bold tracking-[2px] uppercase px-4 py-1.5 rounded-full border border-primary/30;
+    @apply inline-block text-primary text-xs font-semibold tracking-[3px] uppercase;
   }
   .card-artevia {
-    @apply bg-card rounded-[var(--radius)] overflow-hidden cursor-pointer border border-primary/[0.08] transition-all duration-300;
-    box-shadow: 0 8px 32px hsl(var(--foreground) / 0.12);
+    @apply bg-card overflow-hidden cursor-pointer transition-all duration-300;
   }
   .card-artevia:hover {
-    @apply -translate-y-2;
-    box-shadow: 0 20px 60px hsl(var(--foreground) / 0.22);
+    @apply opacity-90;
   }
   .section-title {
-    @apply text-foreground mb-2.5;
-    font-size: clamp(1.8rem, 3vw, 2.6rem);
+    @apply text-foreground mb-3 font-normal;
+    font-size: clamp(1.8rem, 3vw, 2.8rem);
   }
   .section-sub {
     @apply text-muted-foreground text-base mb-12;
@@ -102,8 +99,4 @@
 
 @keyframes fadeUp {
   to { opacity: 1; transform: translateY(0); }
-}
-@keyframes blobPulse {
-  0%, 100% { transform: translateY(-50%) scale(1); }
-  50% { transform: translateY(-50%) scale(1.08); }
 }
