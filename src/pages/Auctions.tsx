@@ -2,19 +2,23 @@ import { useState, useMemo } from "react";
 import { Link } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { allAuctions } from "@/data/auctions";
+import { normalAuctions, luxeAuctions } from "@/data/auctions";
+import { useThemeMode } from "@/hooks/useThemeMode";
 import { Star } from "lucide-react";
 
 const inputClass = "w-full border-[1.5px] border-foreground/[0.18] rounded-lg px-3 py-2.5 bg-background/30 text-foreground focus:border-primary focus:ring-2 focus:ring-primary/15 outline-none transition font-body text-sm";
 
 const Auctions = () => {
+  const { isLuxe } = useThemeMode();
+  const sourceItems = isLuxe ? luxeAuctions : normalAuctions;
+
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("");
   const [status, setStatus] = useState("all");
   const [sort, setSort] = useState("newest");
 
   const filtered = useMemo(() => {
-    let result = allAuctions.filter((a) => {
+    let result = sourceItems.filter((a) => {
       const matchSearch = !search || a.title.toLowerCase().includes(search.toLowerCase()) || a.creator.toLowerCase().includes(search.toLowerCase());
       const matchCat = !category || a.categorySlug === category;
       const matchStatus = status === "all" || a.status === status;
@@ -24,17 +28,23 @@ const Auctions = () => {
     else if (sort === "lowest") result = [...result].sort((a, b) => a.bid - b.bid);
     else result = [...result].sort((a, b) => b.id - a.id);
     return result;
-  }, [search, category, status, sort]);
+  }, [search, category, status, sort, sourceItems]);
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-background transition-colors duration-500">
       <Navbar />
 
       <div className="py-16 text-center">
         <div className="container mx-auto px-6">
-          <div className="hero-eyebrow mb-3.5">Live & Upcoming</div>
-          <h1 className="font-display text-foreground mb-3" style={{ fontSize: "clamp(2rem, 4vw, 3.2rem)" }}>Browse Auctions</h1>
-          <p className="text-muted-foreground max-w-lg mx-auto">Discover original works from verified creators around the world.</p>
+          <div className="hero-eyebrow mb-3.5">{isLuxe ? "Premium Auctions" : "Live & Upcoming"}</div>
+          <h1 className="font-display text-foreground mb-3" style={{ fontSize: "clamp(2rem, 4vw, 3.2rem)" }}>
+            {isLuxe ? "Luxe Collection" : "Browse Auctions"}
+          </h1>
+          <p className="text-muted-foreground max-w-lg mx-auto">
+            {isLuxe
+              ? "Investment-grade artworks above ₹50,000 from acclaimed creators."
+              : "Discover original works from verified creators around the world."}
+          </p>
         </div>
       </div>
 
@@ -42,7 +52,7 @@ const Auctions = () => {
         <div className="container mx-auto px-6">
           {/* Filters */}
           <div className="bg-card rounded-[var(--radius)] p-6 shadow-md border border-primary/[0.08] mb-10">
-            <div className="text-xs font-bold tracking-widest uppercase text-muted-foreground/50 mb-4">Filter & Search Auctions</div>
+            <div className="text-xs font-bold tracking-widest uppercase text-muted-foreground/50 mb-4">Filter & Search</div>
             <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-3">
               <input type="text" placeholder="Title or creator…" value={search} onChange={(e) => setSearch(e.target.value)} className={inputClass} />
               <select value={category} onChange={(e) => setCategory(e.target.value)} className={inputClass}>
@@ -52,6 +62,9 @@ const Auctions = () => {
                 <option value="digital">Digital Art</option>
                 <option value="sculpture">Sculpture</option>
                 <option value="textile">Textile Art</option>
+                <option value="printmaking">Printmaking</option>
+                <option value="jewelry">Jewelry</option>
+                <option value="decor">Home Décor</option>
               </select>
               <select value={status} onChange={(e) => setStatus(e.target.value)} className={inputClass}>
                 <option value="all">All Auctions</option>
