@@ -8,40 +8,27 @@
   :root {
     --background: 30 33% 96%;
     --foreground: 20 12% 16%;
-
     --card: 30 25% 98%;
     --card-foreground: 20 12% 16%;
-
     --popover: 30 25% 98%;
     --popover-foreground: 20 12% 16%;
-
     --primary: 16 65% 52%;
     --primary-foreground: 30 33% 96%;
-
     --primary-dark: 16 65% 44%;
-
     --secondary: 20 12% 16%;
     --secondary-foreground: 30 33% 96%;
-
     --muted: 30 18% 90%;
     --muted-foreground: 20 8% 46%;
-
     --accent: 16 65% 52%;
     --accent-foreground: 30 33% 96%;
-
     --destructive: 0 60% 50%;
     --destructive-foreground: 0 0% 100%;
-
     --border: 30 15% 86%;
     --input: 30 15% 86%;
     --ring: 16 65% 52%;
-
     --radius: 0.5rem;
-
     --dark-bg: 20 14% 12%;
-
     --star: 38 90% 55%;
-
     --sidebar-background: 30 33% 96%;
     --sidebar-foreground: 20 12% 16%;
     --sidebar-primary: 16 65% 52%;
@@ -50,6 +37,30 @@
     --sidebar-accent-foreground: 20 12% 16%;
     --sidebar-border: 30 15% 86%;
     --sidebar-ring: 16 65% 52%;
+  }
+
+  /* ===== LUXE THEME — Black & Gold ===== */
+  .luxe-theme {
+    --background: 0 0% 6%;
+    --foreground: 42 30% 88%;
+    --card: 0 0% 10%;
+    --card-foreground: 42 30% 88%;
+    --popover: 0 0% 10%;
+    --popover-foreground: 42 30% 88%;
+    --primary: 42 70% 50%;
+    --primary-foreground: 0 0% 6%;
+    --primary-dark: 42 70% 40%;
+    --secondary: 42 50% 72%;
+    --secondary-foreground: 0 0% 6%;
+    --muted: 0 0% 14%;
+    --muted-foreground: 42 15% 55%;
+    --accent: 42 70% 50%;
+    --accent-foreground: 0 0% 6%;
+    --border: 42 20% 20%;
+    --input: 42 20% 20%;
+    --ring: 42 70% 50%;
+    --dark-bg: 0 0% 4%;
+    --star: 42 90% 55%;
   }
 }
 
@@ -97,53 +108,20 @@
   }
 }
 
-/* Luxe theme overrides */
-.luxe-tab-active {
-  background: linear-gradient(135deg, hsl(20 14% 12%), hsl(20 12% 22%));
-  color: hsl(42 50% 82%);
-  border-color: hsl(42 40% 55%);
-}
-.luxe-badge {
-  background: hsl(42 40% 55%);
-  color: hsl(20 14% 12%);
-}
-.luxe-heading {
-  background: linear-gradient(135deg, hsl(42 50% 72%), hsl(42 40% 55%));
+/* Luxe-specific decorative styles */
+.luxe-theme .luxe-gold-gradient {
+  background: linear-gradient(135deg, hsl(42 70% 60%), hsl(42 50% 45%));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
-.luxe-card {
-  position: relative;
+
+.luxe-theme .luxe-card-glow:hover {
+  box-shadow: 0 0 30px hsl(42 70% 50% / 0.15);
 }
-.luxe-card::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background: linear-gradient(90deg, transparent, hsl(42 40% 55%), transparent);
-  opacity: 0;
-  transition: opacity 0.4s;
-}
-.luxe-card:hover::after {
-  opacity: 1;
-}
-.luxe-title {
-  color: hsl(20 12% 16%);
-}
-.luxe-price {
-  background: linear-gradient(90deg, hsl(42 40% 45%), hsl(42 50% 60%));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  font-weight: 700;
-}
-.luxe-grid {
-  background: linear-gradient(180deg, hsl(20 14% 12% / 0.02), hsl(20 14% 12% / 0.06));
-  border-radius: 2px;
-  padding: 1.5rem;
+
+.luxe-theme .luxe-border-gold {
+  border-color: hsl(42 40% 30%);
 }
 
 @keyframes fadeUp {
