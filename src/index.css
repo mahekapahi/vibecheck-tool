@@ -97,6 +97,55 @@
   }
 }
 
+/* Luxe theme overrides */
+.luxe-tab-active {
+  background: linear-gradient(135deg, hsl(20 14% 12%), hsl(20 12% 22%));
+  color: hsl(42 50% 82%);
+  border-color: hsl(42 40% 55%);
+}
+.luxe-badge {
+  background: hsl(42 40% 55%);
+  color: hsl(20 14% 12%);
+}
+.luxe-heading {
+  background: linear-gradient(135deg, hsl(42 50% 72%), hsl(42 40% 55%));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.luxe-card {
+  position: relative;
+}
+.luxe-card::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, hsl(42 40% 55%), transparent);
+  opacity: 0;
+  transition: opacity 0.4s;
+}
+.luxe-card:hover::after {
+  opacity: 1;
+}
+.luxe-title {
+  color: hsl(20 12% 16%);
+}
+.luxe-price {
+  background: linear-gradient(90deg, hsl(42 40% 45%), hsl(42 50% 60%));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: 700;
+}
+.luxe-grid {
+  background: linear-gradient(180deg, hsl(20 14% 12% / 0.02), hsl(20 14% 12% / 0.06));
+  border-radius: 2px;
+  padding: 1.5rem;
+}
+
 @keyframes fadeUp {
   to { opacity: 1; transform: translateY(0); }
 }
