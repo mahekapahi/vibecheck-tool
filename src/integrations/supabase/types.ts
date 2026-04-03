@@ -74,6 +74,70 @@ export type Database = {
         }
         Relationships: []
       }
+      bids: {
+        Row: {
+          amount: number
+          auction_id: number
+          created_at: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          auction_id: number
+          created_at?: string
+          id?: string
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          auction_id?: number
+          created_at?: string
+          id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "bids_auction_id_fkey"
+            columns: ["auction_id"]
+            isOneToOne: false
+            referencedRelation: "auctions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      comments: {
+        Row: {
+          auction_id: number
+          created_at: string
+          id: string
+          text: string
+          user_id: string
+        }
+        Insert: {
+          auction_id: number
+          created_at?: string
+          id?: string
+          text: string
+          user_id: string
+        }
+        Update: {
+          auction_id?: number
+          created_at?: string
+          id?: string
+          text?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "comments_auction_id_fkey"
+            columns: ["auction_id"]
+            isOneToOne: false
+            referencedRelation: "auctions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       contact_messages: {
         Row: {
           created_at: string
