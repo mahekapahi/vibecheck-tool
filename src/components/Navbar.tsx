@@ -10,8 +10,11 @@ const Navbar = () => {
   const { user, profile, signOut } = useAuth();
   const { mode, setMode, isLuxe } = useThemeMode();
 
+  const isCreator = profile?.role === "creator";
+
   const links = [
     { to: "/auctions", label: "Shop" },
+    ...(isCreator ? [{ to: "/on-sale", label: "On Sale" }] : []),
     { to: "/about", label: "About" },
     { to: "/rate-us", label: "Rate Us" },
     { to: "/contact", label: "Contact" },
