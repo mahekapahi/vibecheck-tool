@@ -143,11 +143,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       a => a.email.toLowerCase() === email.toLowerCase() && a.password === password
     );
     if (!account) {
-      return { error: "Incorrect email or password. Try demo@artevia.com / demo1234" };
+      return { error: "Incorrect email or password." };
     }
     saveSession(account);
     setUser({ id: account.id, email: account.email });
-    setProfile({ full_name: account.full_name, avatar_url: null, role: "buyer" });
+    setProfile({ full_name: account.full_name, avatar_url: null, role: account.role || "buyer" });
     return { error: null };
   };
 
