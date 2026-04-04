@@ -1,0 +1,46 @@
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { Toaster as Sonner } from "@/components/ui/sonner";
+import { TooltipProvider } from "@/components/ui/tooltip";
+import { AuthProvider } from "@/hooks/useAuth";
+import { ThemeModeProvider } from "@/hooks/useThemeMode";
+import Index from "./pages/Index.tsx";
+import About from "./pages/About.tsx";
+import Contact from "./pages/Contact.tsx";
+import Auctions from "./pages/Auctions.tsx";
+import ProductDetail from "./pages/ProductDetail.tsx";
+import Login from "./pages/Login.tsx";
+import RateUs from "./pages/RateUs.tsx";
+import CreatorDashboard from "./pages/CreatorDashboard.tsx";
+import Account from "./pages/Account.tsx";
+import NotFound from "./pages/NotFound.tsx";
+
+const queryClient = new QueryClient();
+
+const App = () => (
+  <QueryClientProvider client={queryClient}>
+    <TooltipProvider>
+      <Sonner />
+      <BrowserRouter>
+        <AuthProvider>
+          <ThemeModeProvider>
+            <Routes>
+              <Route path="/" element={<Index />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/contact" element={<Contact />} />
+              <Route path="/auctions" element={<Auctions />} />
+              <Route path="/auction/:id" element={<ProductDetail />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/my-products" element={<CreatorDashboard />} />
+              <Route path="/account" element={<Account />} />
+              <Route path="/rate-us" element={<RateUs />} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </ThemeModeProvider>
+        </AuthProvider>
+      </BrowserRouter>
+    </TooltipProvider>
+  </QueryClientProvider>
+);
+
+export default App;

@@ -1,0 +1,153 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Sans:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 30 33% 96%;
+    --foreground: 20 12% 16%;
+    --card: 30 25% 98%;
+    --card-foreground: 20 12% 16%;
+    --popover: 30 25% 98%;
+    --popover-foreground: 20 12% 16%;
+    --primary: 16 65% 52%;
+    --primary-foreground: 30 33% 96%;
+    --primary-dark: 16 65% 44%;
+    --secondary: 20 12% 16%;
+    --secondary-foreground: 30 33% 96%;
+    --muted: 30 18% 90%;
+    --muted-foreground: 20 8% 46%;
+    --accent: 16 65% 52%;
+    --accent-foreground: 30 33% 96%;
+    --destructive: 0 60% 50%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 30 15% 86%;
+    --input: 30 15% 86%;
+    --ring: 16 65% 52%;
+    --radius: 0.5rem;
+    --dark-bg: 20 14% 12%;
+    --star: 38 90% 55%;
+    --sidebar-background: 30 33% 96%;
+    --sidebar-foreground: 20 12% 16%;
+    --sidebar-primary: 16 65% 52%;
+    --sidebar-primary-foreground: 30 33% 96%;
+    --sidebar-accent: 30 18% 90%;
+    --sidebar-accent-foreground: 20 12% 16%;
+    --sidebar-border: 30 15% 86%;
+    --sidebar-ring: 16 65% 52%;
+  }
+
+  /* ===== LUXE THEME — Black & Gold ===== */
+  .luxe-theme {
+    --background: 0 0% 6%;
+    --foreground: 42 30% 88%;
+    --card: 0 0% 10%;
+    --card-foreground: 42 30% 88%;
+    --popover: 0 0% 10%;
+    --popover-foreground: 42 30% 88%;
+    --primary: 42 70% 50%;
+    --primary-foreground: 0 0% 6%;
+    --primary-dark: 42 70% 40%;
+    --secondary: 42 50% 72%;
+    --secondary-foreground: 0 0% 6%;
+    --muted: 0 0% 14%;
+    --muted-foreground: 42 15% 55%;
+    --accent: 42 70% 50%;
+    --accent-foreground: 0 0% 6%;
+    --border: 42 20% 20%;
+    --input: 42 20% 20%;
+    --ring: 42 70% 50%;
+    --dark-bg: 0 0% 4%;
+    --star: 42 90% 55%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground font-body;
+    overflow-x: hidden;
+  }
+  h1, h2, h3, h4, h5 {
+    font-family: 'Playfair Display', serif;
+  }
+}
+
+@layer components {
+  .btn-accent {
+    @apply bg-primary text-primary-foreground rounded-none px-8 py-3 font-semibold font-body text-[0.85rem] tracking-wider uppercase inline-block no-underline cursor-pointer transition-all duration-200;
+  }
+  .btn-accent:hover {
+    @apply bg-primary-dark;
+  }
+  .btn-outline-accent {
+    @apply bg-transparent text-foreground border border-foreground rounded-none px-7 py-2.5 font-semibold font-body text-[0.85rem] tracking-wider uppercase inline-block no-underline cursor-pointer transition-all duration-200;
+  }
+  .btn-outline-accent:hover {
+    @apply bg-foreground text-background;
+  }
+  .hero-eyebrow {
+    @apply inline-block text-primary text-xs font-semibold tracking-[3px] uppercase;
+  }
+  .card-artevia {
+    @apply bg-card overflow-hidden cursor-pointer transition-all duration-300;
+  }
+  .card-artevia:hover {
+    @apply opacity-90;
+  }
+  .section-title {
+    @apply text-foreground mb-3 font-normal;
+    font-size: clamp(1.8rem, 3vw, 2.8rem);
+  }
+  .section-sub {
+    @apply text-muted-foreground text-base mb-12;
+  }
+}
+
+/* Luxe-specific decorative styles */
+.luxe-theme .luxe-gold-gradient {
+  background: linear-gradient(135deg, hsl(42 70% 60%), hsl(42 50% 45%));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.luxe-theme .luxe-card-glow:hover {
+  box-shadow: 0 0 30px hsl(42 70% 50% / 0.15);
+}
+
+.luxe-theme .luxe-border-gold {
+  border-color: hsl(42 40% 30%);
+}
+
+@keyframes fadeUp {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Rating slider thumb */
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: hsl(var(--primary));
+  border: 3px solid hsl(var(--card));
+  box-shadow: 0 2px 8px hsl(var(--primary) / 0.4);
+  cursor: pointer;
+  transition: transform 0.15s;
+}
+input[type="range"]::-webkit-slider-thumb:hover {
+  transform: scale(1.2);
+}
+input[type="range"]::-moz-range-thumb {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: hsl(var(--primary));
+  border: 3px solid hsl(var(--card));
+  cursor: pointer;
+}
