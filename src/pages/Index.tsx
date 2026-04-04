@@ -64,6 +64,127 @@ const Home = () => {
       {/* Products Grid */}
       <SectionTabs />
 
+      {/* ═══ Leaderboard Section ═══ */}
+      <section className="py-16 lg:py-24 bg-muted/30">
+        <div className="container mx-auto px-6">
+          <div className="text-center mb-12">
+            <div className="hero-eyebrow mb-3">🏆 Weekly Leaderboard</div>
+            <h2 className="section-title">Top Picks This Week</h2>
+            <p className="section-sub max-w-lg mx-auto">Trending products and top creators on Artevia right now.</p>
+          </div>
+
+          <div className="grid lg:grid-cols-3 gap-8">
+            {/* Best Selling Products */}
+            <div className="bg-card rounded-2xl p-6 border border-primary/[0.08] shadow-sm">
+              <div className="flex items-center gap-2 mb-5">
+                <TrendingUp size={18} className="text-primary" />
+                <h3 className="font-display text-foreground text-lg">Trending Products</h3>
+              </div>
+              <div className="space-y-3">
+                {allAuctions
+                  .sort((a, b) => b.bid - a.bid)
+                  .slice(0, 5)
+                  .map((item, idx) => (
+                    <Link key={item.id} to={`/auction/${item.id}`} className="flex items-center gap-3 p-2 rounded-xl hover:bg-muted/50 transition-colors group">
+                      <span className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold shrink-0 ${
+                        idx === 0 ? "bg-yellow-400/20 text-yellow-600" :
+                        idx === 1 ? "bg-gray-300/30 text-gray-500" :
+                        idx === 2 ? "bg-orange-300/20 text-orange-500" :
+                        "bg-muted text-muted-foreground"
+                      }`}>
+                        {idx + 1}
+                      </span>
+                      <img src={item.img} alt={item.title} className="w-10 h-10 rounded-lg object-cover shrink-0" />
+                      <div className="flex-1 min-w-0">
+                        <div className="text-sm font-semibold text-foreground truncate group-hover:text-primary transition-colors">{item.title}</div>
+                        <div className="text-xs text-muted-foreground">{item.creator}</div>
+                      </div>
+                      <span className="text-sm font-bold text-primary shrink-0">{item.bidLabel}</span>
+                    </Link>
+                  ))}
+              </div>
+            </div>
+
+            {/* Top Creators */}
+            <div className="bg-card rounded-2xl p-6 border border-primary/[0.08] shadow-sm">
+              <div className="flex items-center gap-2 mb-5">
+                <Crown size={18} className="text-primary" />
+                <h3 className="font-display text-foreground text-lg">Top Creators</h3>
+              </div>
+              <div className="space-y-3">
+                {(() => {
+                  const creatorMap = new Map<string, { name: string; avatar: string; items: number; totalBid: number }>();
+                  allAuctions.forEach((a) => {
+                    const existing = creatorMap.get(a.creator);
+                    if (existing) {
+                      existing.items++;
+                      existing.totalBid += a.bid;
+                    } else {
+                      creatorMap.set(a.creator, { name: a.creator, avatar: a.creatorAvatar, items: 1, totalBid: a.bid });
+                    }
+                  });
+                  return [...creatorMap.values()]
+                    .sort((a, b) => b.totalBid - a.totalBid)
+                    .slice(0, 5)
+                    .map((creator, idx) => (
+                      <div key={creator.name} className="flex items-center gap-3 p-2 rounded-xl">
+                        <span className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold shrink-0 ${
+                          idx === 0 ? "bg-yellow-400/20 text-yellow-600" :
+                          idx === 1 ? "bg-gray-300/30 text-gray-500" :
+                          idx === 2 ? "bg-orange-300/20 text-orange-500" :
+                          "bg-muted text-muted-foreground"
+                        }`}>
+                          {idx + 1}
+                        </span>
+                        <img src={creator.avatar} alt={creator.name} className="w-10 h-10 rounded-full object-cover shrink-0" />
+                        <div className="flex-1 min-w-0">
+                          <div className="text-sm font-semibold text-foreground">{creator.name}</div>
+                          <div className="text-xs text-muted-foreground">{creator.items} listings</div>
+                        </div>
+                        <span className="text-xs font-bold text-primary shrink-0">₹{(creator.totalBid / 1000).toFixed(0)}K+</span>
+                      </div>
+                    ));
+                })()}
+              </div>
+            </div>
+
+            {/* Highest Rated */}
+            <div className="bg-card rounded-2xl p-6 border border-primary/[0.08] shadow-sm">
+              <div className="flex items-center gap-2 mb-5">
+                <Star size={18} className="text-primary" />
+                <h3 className="font-display text-foreground text-lg">Highest Rated</h3>
+              </div>
+              <div className="space-y-3">
+                {allAuctions
+                  .sort((a, b) => b.avgRating - a.avgRating)
+                  .slice(0, 5)
+                  .map((item, idx) => (
+                    <Link key={item.id} to={`/auction/${item.id}`} className="flex items-center gap-3 p-2 rounded-xl hover:bg-muted/50 transition-colors group">
+                      <span className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold shrink-0 ${
+                        idx === 0 ? "bg-yellow-400/20 text-yellow-600" :
+                        idx === 1 ? "bg-gray-300/30 text-gray-500" :
+                        idx === 2 ? "bg-orange-300/20 text-orange-500" :
+                        "bg-muted text-muted-foreground"
+                      }`}>
+                        {idx + 1}
+                      </span>
+                      <img src={item.img} alt={item.title} className="w-10 h-10 rounded-lg object-cover shrink-0" />
+                      <div className="flex-1 min-w-0">
+                        <div className="text-sm font-semibold text-foreground truncate group-hover:text-primary transition-colors">{item.title}</div>
+                        <div className="text-xs text-muted-foreground">{item.creator}</div>
+                      </div>
+                      <div className="flex items-center gap-1 shrink-0">
+                        <Star size={12} className="fill-star text-star" />
+                        <span className="text-sm font-bold text-foreground">{item.avgRating.toFixed(1)}</span>
+                      </div>
+                    </Link>
+                  ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Full-width banner */}
       <section className="relative h-[50vh] overflow-hidden">
         <img src={items[4]?.img} alt="Collection" className="w-full h-full object-cover" />

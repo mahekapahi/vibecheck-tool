@@ -236,9 +236,10 @@ const Login = () => {
         <div className="w-full max-w-md mx-auto px-6">
 
           {/* Mock credentials hint */}
-          <div className="mb-4 bg-primary/[0.08] border border-primary/20 rounded-2xl px-5 py-4 text-center">
-            <p className="text-xs font-semibold text-foreground mb-0.5">🧪 Demo credentials</p>
-            <p className="text-xs text-muted-foreground font-mono">demo@artevia.com &nbsp;/&nbsp; demo1234</p>
+          <div className="mb-4 bg-primary/[0.08] border border-primary/20 rounded-2xl px-5 py-4 text-center space-y-1.5">
+            <p className="text-xs font-semibold text-foreground">🧪 Demo Accounts</p>
+            <p className="text-xs text-muted-foreground font-mono">🛍️ Buyer: buyer@artevia.com / Buyer@123</p>
+            <p className="text-xs text-muted-foreground font-mono">🎨 Creator: creator@artevia.com / Creator@123</p>
           </div>
 
           <div className="bg-card rounded-3xl p-10 shadow-lg border border-primary/[0.08]">
