@@ -103,7 +103,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const stored = getSession();
     if (stored) {
       setUser({ id: stored.id, email: stored.email });
-      setProfile({ full_name: stored.full_name, avatar_url: null, role: "buyer" });
+      setProfile({ full_name: stored.full_name, avatar_url: null, role: stored.role || "buyer" });
     }
     setLoading(false);
   }, []);
