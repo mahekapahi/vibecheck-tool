@@ -37,12 +37,23 @@ interface StoredAccount {
 const MOCK_ACCOUNTS_KEY = "artevia_mock_accounts";
 const MOCK_SESSION_KEY  = "artevia_mock_session";
 
-const DEMO_ACCOUNT: StoredAccount = {
-  id: "demo-001",
-  email: "demo@artevia.com",
-  password: "demo1234",
-  full_name: "Demo User",
+const DEMO_BUYER: StoredAccount = {
+  id: "demo-buyer-001",
+  email: "buyer@artevia.com",
+  password: "Buyer@123",
+  full_name: "Ananya Sharma",
+  role: "buyer",
 };
+
+const DEMO_CREATOR: StoredAccount = {
+  id: "demo-creator-001",
+  email: "creator@artevia.com",
+  password: "Creator@123",
+  full_name: "Maya Chen",
+  role: "creator",
+};
+
+const DEMO_ACCOUNTS = [DEMO_BUYER, DEMO_CREATOR];
 
 const getAccounts = (): StoredAccount[] => {
   try {
