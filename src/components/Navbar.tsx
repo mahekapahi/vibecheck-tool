@@ -1,6 +1,6 @@
 import { Link, useLocation } from "react-router-dom";
 import { useState } from "react";
-import { Menu, X, LogOut, User, ShoppingBag, Sparkles } from "lucide-react";
+import { Menu, X, LogOut, User, ShoppingBag } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { useThemeMode } from "@/hooks/useThemeMode";
 
@@ -8,55 +8,18 @@ const Navbar = () => {
   const location = useLocation();
   const [open, setOpen] = useState(false);
   const { user, profile, signOut } = useAuth();
-  const { mode, setMode, isLuxe } = useThemeMode();
-
-  const isCreator = profile?.role === "creator";
+  const { isLuxe } = useThemeMode();
 
   const links = [
+    { to: "/", label: "Home" },
     { to: "/auctions", label: "Shop" },
-    ...(isCreator ? [{ to: "/on-sale", label: "On Sale" }] : []),
     { to: "/about", label: "About" },
     { to: "/rate-us", label: "Rate Us" },
     { to: "/contact", label: "Contact" },
   ];
 
   return (
-    <nav className={`sticky top-0 z-50 backdrop-blur-sm border-b py-0 transition-colors duration-500 ${
-      isLuxe
-        ? "bg-background/98 border-border"
-        : "bg-background/95 border-border"
-    }`}>
-      {/* AJIO-style mode toggle bar */}
-      <div className="flex items-center justify-center border-b border-border">
-        <button
-          onClick={() => setMode("shop")}
-          className={`relative px-8 py-2.5 text-[0.7rem] font-bold tracking-[3px] uppercase transition-all duration-300 ${
-            !isLuxe
-              ? "text-primary border-b-2 border-primary"
-              : "text-muted-foreground hover:text-foreground border-b-2 border-transparent"
-          }`}
-        >
-          <span className="flex items-center gap-1.5">
-            <ShoppingBag size={12} />
-            Artevia
-          </span>
-        </button>
-        <div className="w-px h-5 bg-border" />
-        <button
-          onClick={() => setMode("luxe")}
-          className={`relative px-8 py-2.5 text-[0.7rem] font-bold tracking-[3px] uppercase transition-all duration-300 ${
-            isLuxe
-              ? "text-primary border-b-2 border-primary"
-              : "text-muted-foreground hover:text-foreground border-b-2 border-transparent"
-          }`}
-        >
-          <span className="flex items-center gap-1.5">
-            <Sparkles size={12} />
-            Luxe
-          </span>
-        </button>
-      </div>
-
+    <nav className="sticky top-0 z-50 backdrop-blur-sm border-b py-0 bg-background/95 border-border transition-colors duration-500">
       {/* Main nav */}
       <div className="container mx-auto px-6 flex items-center justify-between py-4">
         <Link to="/" className="font-display text-2xl text-foreground tracking-tight">
@@ -76,7 +39,7 @@ const Navbar = () => {
               key={l.to}
               to={l.to}
               className={"text-sm tracking-wider uppercase transition-colors " +
-                (location.pathname === l.to
+                ((l.to === "/" ? location.pathname === "/" : location.pathname.startsWith(l.to))
                   ? "text-primary font-semibold"
                   : "text-foreground hover:text-primary"
                 )
@@ -119,7 +82,7 @@ const Navbar = () => {
           {links.map((l) => (
             <Link key={l.to} to={l.to} onClick={() => setOpen(false)}
               className={"block px-3 py-2 text-sm tracking-wider uppercase " +
-                (location.pathname === l.to ? "text-primary font-semibold" : "text-foreground")
+                ((l.to === "/" ? location.pathname === "/" : location.pathname.startsWith(l.to)) ? "text-primary font-semibold" : "text-foreground")
               }
             >
               {l.label}

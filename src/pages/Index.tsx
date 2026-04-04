@@ -102,6 +102,41 @@ const Home = () => {
         </div>
       </section>
 
+      {/* Register as Buyer / Creator */}
+      <section className="py-16 lg:py-24">
+        <div className="container mx-auto px-6">
+          <div className="text-center mb-12">
+            <div className="hero-eyebrow mb-3">Get Started</div>
+            <h2 className="section-title">Join Artevia Today</h2>
+            <p className="section-sub max-w-md mx-auto">Whether you're here to collect or create, there's a place for you.</p>
+          </div>
+          <div className="grid md:grid-cols-2 gap-6 max-w-3xl mx-auto">
+            {/* Buyer */}
+            <div className="bg-card rounded-3xl p-10 border border-primary/[0.08] shadow-md flex flex-col items-center text-center hover:-translate-y-1 transition-transform duration-300">
+              <div className="text-5xl mb-5">🛍️</div>
+              <h3 className="font-display text-foreground text-xl mb-3">Join as a Buyer</h3>
+              <p className="text-sm text-muted-foreground leading-relaxed mb-8">
+                Browse and bid on original artworks from verified creators. Build your collection, track live auctions, and own one-of-a-kind pieces.
+              </p>
+              <Link to="/login" className="btn-accent w-full py-3.5 text-center">
+                Register as Buyer
+              </Link>
+            </div>
+            {/* Creator */}
+            <div className="bg-card rounded-3xl p-10 border border-primary/[0.08] shadow-md flex flex-col items-center text-center hover:-translate-y-1 transition-transform duration-300">
+              <div className="text-5xl mb-5">🎨</div>
+              <h3 className="font-display text-foreground text-xl mb-3">Join as a Creator</h3>
+              <p className="text-sm text-muted-foreground leading-relaxed mb-8">
+                List your artwork, set your reserve price, and reach thousands of collectors. Keep full control over your creative work and earnings.
+              </p>
+              <Link to="/login" className="btn-accent w-full py-3.5 text-center">
+                Register as Creator
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <Footer />
     </div>
   );
