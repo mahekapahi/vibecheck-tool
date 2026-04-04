@@ -1,76 +1,151 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
-import { supabase } from "@/integrations/supabase/client";
-import type { User, Session } from "@supabase/supabase-js";
+
+// ─── Types ────────────────────────────────────────────────────────────────────
+
+interface MockUser {
+  id: string;
+  email: string;
+}
+
+interface Profile {
+  full_name: string;
+  avatar_url: string | null;
+  role: string;
+}
 
 interface AuthContextType {
-  user: User | null;
-  session: Session | null;
-  profile: { full_name: string; avatar_url: string | null; role: string } | null;
+  user: MockUser | null;
+  session: { user: MockUser } | null;
+  profile: Profile | null;
   loading: boolean;
   signUp: (email: string, password: string, fullName: string) => Promise<{ error: string | null }>;
   signIn: (email: string, password: string) => Promise<{ error: string | null }>;
   signOut: () => Promise<void>;
 }
 
+// ─── Mock credentials ─────────────────────────────────────────────────────────
+// Demo accounts that always work — no backend needed.
+
+interface StoredAccount {
+  id: string;
+  email: string;
+  password: string;
+  full_name: string;
+}
+
+const MOCK_ACCOUNTS_KEY = "artevia_mock_accounts";
+const MOCK_SESSION_KEY  = "artevia_mock_session";
+
+const DEMO_ACCOUNT: StoredAccount = {
+  id: "demo-001",
+  email: "demo@artevia.com",
+  password: "demo1234",
+  full_name: "Demo User",
+};
+
+const getAccounts = (): StoredAccount[] => {
+  try {
+    const raw = localStorage.getItem(MOCK_ACCOUNTS_KEY);
+    const saved: StoredAccount[] = raw ? JSON.parse(raw) : [];
+    // Always include the built-in demo account
+    if (!saved.find(a => a.email === DEMO_ACCOUNT.email)) {
+      saved.push(DEMO_ACCOUNT);
+    }
+    return saved;
+  } catch {
+    return [DEMO_ACCOUNT];
+  }
+};
+
+const saveAccounts = (accounts: StoredAccount[]) => {
+  localStorage.setItem(MOCK_ACCOUNTS_KEY, JSON.stringify(accounts));
+};
+
+const getSession = (): StoredAccount | null => {
+  try {
+    const raw = localStorage.getItem(MOCK_SESSION_KEY);
+    return raw ? JSON.parse(raw) : null;
+  } catch {
+    return null;
+  }
+};
+
+const saveSession = (account: StoredAccount | null) => {
+  if (account) {
+    localStorage.setItem(MOCK_SESSION_KEY, JSON.stringify(account));
+  } else {
+    localStorage.removeItem(MOCK_SESSION_KEY);
+  }
+};
+
+// ─── Context ──────────────────────────────────────────────────────────────────
+
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [user, setUser] = useState<User | null>(null);
-  const [session, setSession] = useState<Session | null>(null);
-  const [profile, setProfile] = useState<AuthContextType["profile"]>(null);
+  const [user, setUser]       = useState<MockUser | null>(null);
+  const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
 
-  const fetchProfile = async (userId: string) => {
-    const { data } = await supabase
-      .from("profiles")
-      .select("full_name, avatar_url, role")
-      .eq("user_id", userId)
-      .single();
-    setProfile(data);
-  };
-
+  // Rehydrate session on mount
   useEffect(() => {
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session);
-      setUser(session?.user ?? null);
-      if (session?.user) {
-        setTimeout(() => fetchProfile(session.user.id), 0);
-      } else {
-        setProfile(null);
-      }
-      setLoading(false);
-    });
-
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-      setUser(session?.user ?? null);
-      if (session?.user) fetchProfile(session.user.id);
-      setLoading(false);
-    });
-
-    return () => subscription.unsubscribe();
+    const stored = getSession();
+    if (stored) {
+      setUser({ id: stored.id, email: stored.email });
+      setProfile({ full_name: stored.full_name, avatar_url: null, role: "buyer" });
+    }
+    setLoading(false);
   }, []);
 
-  const signUp = async (email: string, password: string, fullName: string) => {
-    const { error } = await supabase.auth.signUp({
-      email,
+  const signUp = async (
+    email: string,
+    password: string,
+    fullName: string
+  ): Promise<{ error: string | null }> => {
+    await new Promise(r => setTimeout(r, 600)); // simulate network
+    const accounts = getAccounts();
+    if (accounts.find(a => a.email.toLowerCase() === email.toLowerCase())) {
+      return { error: "An account with this email already exists." };
+    }
+    const newAccount: StoredAccount = {
+      id: `user-${Date.now()}`,
+      email: email.toLowerCase(),
       password,
-      options: {
-        data: { full_name: fullName },
-        emailRedirectTo: window.location.origin,
-      },
-    });
-    return { error: error?.message ?? null };
+      full_name: fullName,
+    };
+    saveAccounts([...accounts, newAccount]);
+    // Auto sign-in after signup
+    saveSession(newAccount);
+    setUser({ id: newAccount.id, email: newAccount.email });
+    setProfile({ full_name: newAccount.full_name, avatar_url: null, role: "buyer" });
+    return { error: null };
   };
 
-  const signIn = async (email: string, password: string) => {
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
-    return { error: error?.message ?? null };
+  const signIn = async (
+    email: string,
+    password: string
+  ): Promise<{ error: string | null }> => {
+    await new Promise(r => setTimeout(r, 600));
+    const accounts = getAccounts();
+    const account = accounts.find(
+      a => a.email.toLowerCase() === email.toLowerCase() && a.password === password
+    );
+    if (!account) {
+      return { error: "Incorrect email or password. Try demo@artevia.com / demo1234" };
+    }
+    saveSession(account);
+    setUser({ id: account.id, email: account.email });
+    setProfile({ full_name: account.full_name, avatar_url: null, role: "buyer" });
+    return { error: null };
   };
 
   const signOut = async () => {
-    await supabase.auth.signOut();
+    saveSession(null);
+    setUser(null);
+    setProfile(null);
   };
+
+  const session = user ? { user } : null;
 
   return (
     <AuthContext.Provider value={{ user, session, profile, loading, signUp, signIn, signOut }}>

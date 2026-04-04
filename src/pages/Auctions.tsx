@@ -4,12 +4,12 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { normalAuctions, luxeAuctions } from "@/data/auctions";
 import { useThemeMode } from "@/hooks/useThemeMode";
-import { Star } from "lucide-react";
+import { Star, ShoppingBag, Sparkles } from "lucide-react";
 
 const inputClass = "w-full border-[1.5px] border-foreground/[0.18] rounded-lg px-3 py-2.5 bg-background/30 text-foreground focus:border-primary focus:ring-2 focus:ring-primary/15 outline-none transition font-body text-sm";
 
 const Auctions = () => {
-  const { isLuxe } = useThemeMode();
+  const { isLuxe, mode, setMode } = useThemeMode();
   const sourceItems = isLuxe ? luxeAuctions : normalAuctions;
 
   const [search, setSearch] = useState("");
@@ -45,6 +45,32 @@ const Auctions = () => {
               ? "Investment-grade artworks above ₹50,000 from acclaimed creators."
               : "Discover original works from verified creators around the world."}
           </p>
+
+          {/* Shop / Luxe tab switcher */}
+          <div className="inline-flex items-center border border-border rounded-full p-1 mt-8 bg-card shadow-sm">
+            <button
+              onClick={() => setMode("shop")}
+              className={`flex items-center gap-2 px-6 py-2 rounded-full text-[0.7rem] font-bold tracking-[2.5px] uppercase transition-all duration-300 ${
+                !isLuxe
+                  ? "bg-primary text-primary-foreground shadow-sm"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              <ShoppingBag size={12} />
+              Shop
+            </button>
+            <button
+              onClick={() => setMode("luxe")}
+              className={`flex items-center gap-2 px-6 py-2 rounded-full text-[0.7rem] font-bold tracking-[2.5px] uppercase transition-all duration-300 ${
+                isLuxe
+                  ? "bg-primary text-primary-foreground shadow-sm"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              <Sparkles size={12} />
+              Luxe
+            </button>
+          </div>
         </div>
       </div>
 
