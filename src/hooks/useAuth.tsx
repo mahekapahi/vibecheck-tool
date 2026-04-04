@@ -111,9 +111,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const signUp = async (
     email: string,
     password: string,
-    fullName: string
+    fullName: string,
+    role: "buyer" | "creator" = "buyer"
   ): Promise<{ error: string | null }> => {
-    await new Promise(r => setTimeout(r, 600)); // simulate network
+    await new Promise(r => setTimeout(r, 600));
     const accounts = getAccounts();
     if (accounts.find(a => a.email.toLowerCase() === email.toLowerCase())) {
       return { error: "An account with this email already exists." };
@@ -123,12 +124,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       email: email.toLowerCase(),
       password,
       full_name: fullName,
+      role,
     };
     saveAccounts([...accounts, newAccount]);
-    // Auto sign-in after signup
     saveSession(newAccount);
     setUser({ id: newAccount.id, email: newAccount.email });
-    setProfile({ full_name: newAccount.full_name, avatar_url: null, role: "buyer" });
+    setProfile({ full_name: newAccount.full_name, avatar_url: null, role });
     return { error: null };
   };
 
