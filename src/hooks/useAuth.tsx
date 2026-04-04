@@ -31,6 +31,7 @@ interface StoredAccount {
   email: string;
   password: string;
   full_name: string;
+  role: "buyer" | "creator";
 }
 
 const MOCK_ACCOUNTS_KEY = "artevia_mock_accounts";
