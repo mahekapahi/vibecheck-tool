@@ -18,7 +18,7 @@ interface AuthContextType {
   session: { user: MockUser } | null;
   profile: Profile | null;
   loading: boolean;
-  signUp: (email: string, password: string, fullName: string) => Promise<{ error: string | null }>;
+  signUp: (email: string, password: string, fullName: string, role?: "buyer" | "creator") => Promise<{ error: string | null }>;
   signIn: (email: string, password: string) => Promise<{ error: string | null }>;
   signOut: () => Promise<void>;
 }
@@ -31,29 +31,40 @@ interface StoredAccount {
   email: string;
   password: string;
   full_name: string;
+  role: "buyer" | "creator";
 }
 
 const MOCK_ACCOUNTS_KEY = "artevia_mock_accounts";
 const MOCK_SESSION_KEY  = "artevia_mock_session";
 
-const DEMO_ACCOUNT: StoredAccount = {
-  id: "demo-001",
-  email: "demo@artevia.com",
-  password: "demo1234",
-  full_name: "Demo User",
+const DEMO_BUYER: StoredAccount = {
+  id: "demo-buyer-001",
+  email: "buyer@artevia.com",
+  password: "Buyer@123",
+  full_name: "Ananya Sharma",
+  role: "buyer",
 };
+
+const DEMO_CREATOR: StoredAccount = {
+  id: "demo-creator-001",
+  email: "creator@artevia.com",
+  password: "Creator@123",
+  full_name: "Maya Chen",
+  role: "creator",
+};
+
+const DEMO_ACCOUNTS = [DEMO_BUYER, DEMO_CREATOR];
 
 const getAccounts = (): StoredAccount[] => {
   try {
     const raw = localStorage.getItem(MOCK_ACCOUNTS_KEY);
     const saved: StoredAccount[] = raw ? JSON.parse(raw) : [];
-    // Always include the built-in demo account
-    if (!saved.find(a => a.email === DEMO_ACCOUNT.email)) {
-      saved.push(DEMO_ACCOUNT);
+    for (const demo of DEMO_ACCOUNTS) {
+      if (!saved.find(a => a.email === demo.email)) saved.push(demo);
     }
     return saved;
   } catch {
-    return [DEMO_ACCOUNT];
+    return [...DEMO_ACCOUNTS];
   }
 };
 
@@ -92,7 +103,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const stored = getSession();
     if (stored) {
       setUser({ id: stored.id, email: stored.email });
-      setProfile({ full_name: stored.full_name, avatar_url: null, role: "buyer" });
+      setProfile({ full_name: stored.full_name, avatar_url: null, role: stored.role || "buyer" });
     }
     setLoading(false);
   }, []);
@@ -100,9 +111,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const signUp = async (
     email: string,
     password: string,
-    fullName: string
+    fullName: string,
+    role: "buyer" | "creator" = "buyer"
   ): Promise<{ error: string | null }> => {
-    await new Promise(r => setTimeout(r, 600)); // simulate network
+    await new Promise(r => setTimeout(r, 600));
     const accounts = getAccounts();
     if (accounts.find(a => a.email.toLowerCase() === email.toLowerCase())) {
       return { error: "An account with this email already exists." };
@@ -112,12 +124,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       email: email.toLowerCase(),
       password,
       full_name: fullName,
+      role,
     };
     saveAccounts([...accounts, newAccount]);
-    // Auto sign-in after signup
     saveSession(newAccount);
     setUser({ id: newAccount.id, email: newAccount.email });
-    setProfile({ full_name: newAccount.full_name, avatar_url: null, role: "buyer" });
+    setProfile({ full_name: newAccount.full_name, avatar_url: null, role });
     return { error: null };
   };
 
@@ -131,11 +143,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       a => a.email.toLowerCase() === email.toLowerCase() && a.password === password
     );
     if (!account) {
-      return { error: "Incorrect email or password. Try demo@artevia.com / demo1234" };
+      return { error: "Incorrect email or password." };
     }
     saveSession(account);
     setUser({ id: account.id, email: account.email });
-    setProfile({ full_name: account.full_name, avatar_url: null, role: "buyer" });
+    setProfile({ full_name: account.full_name, avatar_url: null, role: account.role || "buyer" });
     return { error: null };
   };
 
