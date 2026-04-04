@@ -2,8 +2,9 @@ import { Link } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import SectionTabs from "@/components/SectionTabs";
-import { luxeAuctions, normalAuctions } from "@/data/auctions";
+import { luxeAuctions, normalAuctions, allAuctions } from "@/data/auctions";
 import { useThemeMode } from "@/hooks/useThemeMode";
+import { Trophy, Crown, TrendingUp, Star } from "lucide-react";
 
 const Home = () => {
   const { isLuxe } = useThemeMode();
