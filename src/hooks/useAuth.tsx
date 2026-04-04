@@ -59,13 +59,12 @@ const getAccounts = (): StoredAccount[] => {
   try {
     const raw = localStorage.getItem(MOCK_ACCOUNTS_KEY);
     const saved: StoredAccount[] = raw ? JSON.parse(raw) : [];
-    // Always include the built-in demo account
-    if (!saved.find(a => a.email === DEMO_ACCOUNT.email)) {
-      saved.push(DEMO_ACCOUNT);
+    for (const demo of DEMO_ACCOUNTS) {
+      if (!saved.find(a => a.email === demo.email)) saved.push(demo);
     }
     return saved;
   } catch {
-    return [DEMO_ACCOUNT];
+    return [...DEMO_ACCOUNTS];
   }
 };
 
