@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { ArrowLeft, Truck, Shield, RotateCcw } from "lucide-react";
 import Navbar from "@/components/Navbar";
@@ -5,10 +6,12 @@ import Footer from "@/components/Footer";
 import { allAuctions } from "@/data/auctions";
 import { useAuth } from "@/hooks/useAuth";
 import { toast } from "sonner";
+import { openRazorpayCheckout } from "@/hooks/useRazorpay";
 
 const ProductDetail = () => {
   const { id } = useParams();
   const { user } = useAuth();
+  const [paying, setPaying] = useState(false);
   const auction = allAuctions.find((a) => a.id === Number(id));
 
   if (!auction) {
@@ -54,12 +57,35 @@ const ProductDetail = () => {
             <p className="text-muted-foreground leading-relaxed mb-8">{auction.description}</p>
 
             {user ? (
-              <button
-                className="btn-accent w-full text-center mb-8"
-                onClick={() => toast.success("Bid placed! (Demo)")}
-              >
-                Place Bid
-              </button>
+              <div className="flex flex-col gap-3 mb-8">
+                <button
+                  className="btn-accent w-full text-center"
+                  onClick={() => toast.success("Bid placed! (Demo)")}
+                >
+                  Place Bid
+                </button>
+                <button
+                  className="w-full py-3 px-6 rounded-full bg-green-600 hover:bg-green-700 text-white font-semibold text-sm tracking-wide transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+                  disabled={paying}
+                  onClick={async () => {
+                    setPaying(true);
+                    try {
+                      await openRazorpayCheckout({
+                        auctionId: auction.id,
+                        amount: auction.bid,
+                        title: auction.title,
+                        description: `Purchase: ${auction.title}`,
+                        userName: user.user_metadata?.full_name ?? "",
+                        userEmail: user.email ?? "",
+                      });
+                    } finally {
+                      setPaying(false);
+                    }
+                  }}
+                >
+                  {paying ? "Opening Payment..." : `Buy Now — ${auction.bidLabel}`}
+                </button>
+              </div>
             ) : (
               <Link to="/login" className="btn-accent block text-center mb-8">
                 Sign In to Bid

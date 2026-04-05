@@ -128,7 +128,7 @@ function buildItems(titles: string[], prices: number[], idOffset: number): Aucti
       status: statuses[i % statuses.length],
       description: `A stunning ${cat.name.toLowerCase()} piece by ${creators[i % creators.length]}. Original, hand-finished work with certificate of authenticity.`,
       reviews: makeReviews(i),
-      avgRating: 4.3 + (i % 7) * 0.1,
+      avgRating: parseFloat((4.3 + (i % 7) * 0.1).toFixed(1)),
     };
   });
 }

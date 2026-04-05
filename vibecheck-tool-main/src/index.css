@@ -124,6 +124,49 @@
   border-color: hsl(42 40% 30%);
 }
 
+/* ── Luxe Card — refined premium card style ── */
+.luxe-theme .card-luxe {
+  border: 1px solid hsl(42 35% 22%);
+  box-shadow: 0 2px 16px hsl(0 0% 0% / 0.45), inset 0 1px 0 hsl(42 60% 60% / 0.06);
+  transition: box-shadow 0.35s ease, transform 0.35s ease, border-color 0.35s ease;
+}
+.luxe-theme .card-luxe:hover {
+  box-shadow: 0 10px 40px hsl(42 70% 50% / 0.14), 0 2px 16px hsl(0 0% 0% / 0.55);
+  border-color: hsl(42 55% 35%);
+  transform: translateY(-3px);
+}
+
+/* ── LUXE badge ── */
+.luxe-badge {
+  background: linear-gradient(135deg, hsl(42 80% 54%), hsl(42 55% 38%));
+  color: hsl(0 0% 5%);
+  font-size: 0.5rem;
+  font-weight: 900;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  padding: 3px 9px 2px;
+  font-family: 'DM Sans', sans-serif;
+}
+
+/* ── Luxe product card (SectionTabs) ── */
+.luxe-theme .product-card-luxe {
+  background: hsl(0 0% 9%);
+  border: 1px solid hsl(42 30% 20%);
+  padding-bottom: 0.25rem;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+.luxe-theme .product-card-luxe:hover {
+  border-color: hsl(42 55% 32%);
+  box-shadow: 0 8px 32px hsl(42 70% 50% / 0.1), 0 2px 12px hsl(0 0% 0% / 0.5);
+}
+
+/* ── Luxe price accent line ── */
+.luxe-theme .luxe-price-divider {
+  height: 1px;
+  background: linear-gradient(90deg, hsl(42 60% 50% / 0.35), transparent);
+  margin-bottom: 0.5rem;
+}
+
 @keyframes fadeUp {
   to { opacity: 1; transform: translateY(0); }
 }

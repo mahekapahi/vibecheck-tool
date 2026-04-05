@@ -69,7 +69,7 @@ const ProductCard = ({
   return (
     <Link
       to={"/auction/" + item.id}
-      className="block group relative"
+      className={`block group relative ${isLuxe ? "product-card-luxe" : ""}`}
     >
       <div className={`overflow-hidden ${isFeatured ? "mb-4" : "mb-3"} relative`}>
         <img
@@ -78,29 +78,40 @@ const ProductCard = ({
           className="w-full aspect-[3/4] object-cover transition-transform duration-700 group-hover:scale-105"
           loading="lazy"
         />
+        {/* Luxe overlay on hover */}
         {isLuxe && (
-          <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
         )}
+        {/* LUXE badge — top-right corner */}
+        {isLuxe && (
+          <span className="luxe-badge absolute top-3 right-3">LUXE</span>
+        )}
+        {/* Other badges — bottom-left */}
         {item.badge && (
-          <span className="absolute top-3 left-3 px-2 py-1 text-[0.6rem] font-bold tracking-wider uppercase bg-primary text-primary-foreground">
+          <span className={`absolute ${isLuxe ? "bottom-3 left-3" : "top-3 left-3"} px-2 py-1 text-[0.6rem] font-bold tracking-wider uppercase bg-primary text-primary-foreground`}>
             {item.badge}
           </span>
         )}
       </div>
-      <div className="text-[0.65rem] text-muted-foreground tracking-wider uppercase mb-1">
-        {item.category}
-      </div>
-      <h3 className={`font-display text-foreground mb-1 group-hover:text-primary transition-colors ${isFeatured ? "text-base" : "text-sm"}`}>
-        {item.title}
-      </h3>
-      <div className={`text-sm font-medium ${isLuxe ? "text-primary font-bold" : "text-foreground"}`}>
-        {item.bidLabel}
-      </div>
-      {isLuxe && (
-        <div className="text-[0.6rem] text-muted-foreground mt-1 tracking-wide">
-          by {item.creator}
+
+      {isLuxe && <div className="luxe-price-divider mx-3" />}
+
+      <div className={isLuxe ? "px-3 pb-3" : ""}>
+        <div className="text-[0.65rem] text-muted-foreground tracking-wider uppercase mb-1">
+          {item.category}
         </div>
-      )}
+        <h3 className={`font-display text-foreground mb-1 group-hover:text-primary transition-colors ${isFeatured ? "text-base" : "text-sm"} ${isLuxe ? "leading-snug tracking-wide" : ""}`}>
+          {item.title}
+        </h3>
+        {isLuxe && (
+          <div className="text-[0.6rem] text-muted-foreground tracking-wide mb-2">
+            by {item.creator}
+          </div>
+        )}
+        <div className={`font-medium ${isLuxe ? "text-primary font-bold text-sm tracking-wide" : "text-sm text-foreground"}`}>
+          {item.bidLabel}
+        </div>
+      </div>
     </Link>
   );
 };
